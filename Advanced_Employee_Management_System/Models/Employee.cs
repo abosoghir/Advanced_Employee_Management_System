@@ -9,7 +9,7 @@ public class Employee
 {
     public int Id { get; set; }
 
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } 
 
     public DateTime HireDate { get; set; }
 
@@ -17,9 +17,18 @@ public class Employee
 
     public double Salary { get; set; }
 
-    public List<string> Skills { get; set; } = [];
+    public List<string> Skills { get; set; }
+    public Employee()
+    {
+        Id = 0;
+        Name = string.Empty;
+        HireDate = DateTime.Now;
+        DepartmentId = 0;
+        Salary = 0.0;
+        Skills = new List<string>();
+    }
 
-  
+
     public virtual void Display()
     {
         Console.WriteLine("------------------------------------");
@@ -50,25 +59,38 @@ public class Employee
     }
     public bool AddSkill(string skill)
     {
-        if (Skills.Contains(skill))
+        if (HasSkill(skill))
         {
-            return false;
+            return false; // Skill already exists
         }
-        Skills.Add(skill);
-        return true;
+
+        else
+        {
+            Skills.Add(skill);
+            return true;
+        }
     }
     public bool RemoveSkill(string skill)
     {
-        if (!Skills.Contains(skill))
+        if(HasSkill(skill))
         {
-            return false;
-        }
-        Skills.Remove(skill);
-        return true;
+            Skills.Remove(skill);
+            return true; // Skill removed successfully
+        } 
+
+        else     
+            return false; // Skill not found
     }
     public bool HasSkill(string skill)
     {
-        return Skills.Contains(skill);
+        foreach (var existingSkill in Skills)
+        {
+            if (existingSkill == skill)
+            {
+                return true; // Skill exists
+            }
+        }
+        return false;
     }
     public bool HasSkills()
     {
@@ -105,6 +127,28 @@ public class Employee
                 return false;
             }
             return true;
+        }
+    }
+    public bool HasName(string name)
+    {
+        if(Name == name)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool HasId(int id)
+    {
+        if(Id == id)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

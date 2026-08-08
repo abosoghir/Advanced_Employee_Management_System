@@ -9,8 +9,10 @@ public class Manager : Employee
 {
     public List<Employee> TeamMembers { get; set; } = [];
 
-    
-
+    public Manager()
+    {
+        TeamMembers = new List<Employee>();
+    }
     public void AddTeamMember(Employee employee)
     {
         TeamMembers.Add(employee);
@@ -37,17 +39,17 @@ public class Manager : Employee
             }
         }
     }
-    public void RemoveTeamMember(int employeeId)
+    public bool RemoveTeamMember(int employeeId)
     {
         var memberToRemove = TeamMembers.FirstOrDefault(m => m.Id == employeeId);
         if (memberToRemove != null)
         {
             TeamMembers.Remove(memberToRemove);
-            Console.WriteLine($"Employee with ID {employeeId} removed from the team.");
+            return true;
         }
         else
         {
-            Console.WriteLine($"Employee with ID {employeeId} not found in the team.");
+            return false;
         }
     }
 

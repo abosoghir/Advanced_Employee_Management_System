@@ -8,10 +8,13 @@ namespace Advanced_Employee_Management_System.Models;
 public class Department
 {
     public int Id { get; set; }
+    public string Name { get; set; } 
 
-    public string Name { get; set; } = string.Empty;
-
-
+    public Department()
+    {
+        Id = 0;
+        Name = string.Empty;
+    }
     public void Display()
     {
         Console.WriteLine($"{Id} - {Name}");
