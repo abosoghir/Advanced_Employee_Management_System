@@ -85,23 +85,344 @@ public class Company
         }
 
     }
-    //public Result<Employee> PromoteEmployeetoManager(int employeeId)
-    //{
-    //    var employee = _employees.FirstOrDefault(e => e.Id == employeeId);
-    //    if (employee == null)
-    //    {
-    //        return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
-    //    }
-    //    else
-    //    {
-    //        foreach (var emp in departmentEmployees)
-    //        {
-    //            emp.Display();
-    //        }
-    //        return Result<Employee>.Success($"Found {departmentEmployees.Count} employees in Department ID {departmentId}.", null);
-    //    }
-    //}
-
+    public Result<Employee> PromoteEmployeetoManager(int employeeId)
+    {
+        var employee = new Employee();
+        int indx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                indx = i;
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            if(employee is Manager)
+            {
+                return Result<Employee>.Failure($"Employee with ID {employeeId} is already a Manager.");
+            }
+            else 
+            {
+                var manager = new Manager
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    HireDate = employee.HireDate,
+                    DepartmentId = employee.DepartmentId,
+                    Salary = employee.Salary,
+                    Skills = employee.Skills
+                };
+                _employees[indx] = manager;
+                Log($"Employee with ID {employeeId} promoted to Manager.");
+                return Result<Employee>.Success($"Employee with ID {employeeId} promoted to Manager.", manager);
+            }
+        }
+    }
+    public Result<Employee> DemoteManagerToEmployee(int employeeId)
+    {
+        var employee = new Employee();
+        int indx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                indx = i;
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            if(employee is not Manager)
+            {
+                return Result<Employee>.Failure($"Employee with ID {employeeId} is not a Manager.");
+            }
+            else 
+            {
+                var regularEmployee = new Employee
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    HireDate = employee.HireDate,
+                    DepartmentId = employee.DepartmentId,
+                    Salary = employee.Salary,
+                    Skills = employee.Skills
+                };
+                _employees[indx] = regularEmployee;
+                Log($"Manager with ID {employeeId} demoted to Employee.");
+                return Result<Employee>.Success($"Manager with ID {employeeId} demoted to Employee.", regularEmployee);
+            }
+        }
+    }
+    public Result<Employee> RemoveEmployee(int employeeId)
+    {
+        var employee = new Employee();
+        int indx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            _employees.Remove(employee);
+            Log($"Employee with ID {employeeId} removed from the company.");
+            return Result<Employee>.Success($"Employee with ID {employeeId} removed from the company.", employee);
+        }
+    }
+    public Result<Employee> UpdateEmployee(int employeeId)
+    {
+        var employee = new Employee();
+        int indx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                indx = i;
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            Console.WriteLine("Enter new details for the employee:");
+            var updatedEmployee = new Employee();
+            if (updatedEmployee.Read())
+            {
+                _employees[indx] = updatedEmployee;
+                Log($"Employee with ID {employeeId} updated.");
+                return Result<Employee>.Success($"Employee with ID {employeeId} updated.", updatedEmployee);
+            }
+            else
+            {
+                return Result<Employee>.Failure("Failed to read updated employee information.");
+            }
+        }
+    }
+    public Result<Employee> AddSkillToEmployee(int employeeId, string skill)
+    {
+        var employee = new Employee();
+        int indx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                indx = i;
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            if (employee.AddSkill(skill))
+            {
+                Log($"Skill '{skill}' added to employee with ID {employeeId}.");
+                return Result<Employee>.Success($"Skill '{skill}' added to employee with ID {employeeId}.", employee);
+            }
+            else
+            {
+                return Result<Employee>.Failure($"Employee with ID {employeeId} already has the skill '{skill}'.");
+            }
+        }
+    }
+    public Result<Employee> RemoveSkillFromEmployee(int employeeId, string skill)
+    {
+        var employee = new Employee();
+        int indx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                indx = i;
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            if (employee.RemoveSkill(skill))
+            {
+                Log($"Skill '{skill}' removed from employee with ID {employeeId}.");
+                return Result<Employee>.Success($"Skill '{skill}' removed from employee with ID {employeeId}.", employee);
+            }
+            else
+            {
+                return Result<Employee>.Failure($"Employee with ID {employeeId} does not have the skill '{skill}'.");
+            }
+        }
+    }
+    public Result<Employee> ShowEmployeeDetails(int employeeId)
+    {
+        var employee = new Employee();
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                break;
+            }
+        }
+        if (employee == null)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        else
+        {
+            employee.Display();
+            return Result<Employee>.Success($"Employee with ID {employeeId} details displayed.", employee);
+        }
+    }
+    public Result<Employee> AddMemeberToManager(int managerId, int employeeId)
+    {
+        var manager = new Manager();
+        var employee = new Employee();
+        int managerIndx = -1;
+        int employeeIndx = -1;
+        for (int i = 0; i < _employees.Count; i++)
+        {
+            if (_employees[i].HasId(managerId) && _employees[i] is Manager)
+            {
+                manager = (Manager)_employees[i];
+                managerIndx = i;
+            }
+            if (_employees[i].HasId(employeeId))
+            {
+                employee = _employees[i];
+                employeeIndx = i;
+            }
+        }
+        if (managerIndx == -1)
+        {
+            return Result<Employee>.Failure($"No manager found with ID {managerId}.");
+        }
+        if (employeeIndx == -1)
+        {
+            return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
+        }
+        manager.AddTeamMember(employee);
+        Log($"Employee with ID {employeeId} added to manager with ID {managerId}.");
+        return Result<Employee>.Success($"Employee with ID {employeeId} added to manager with ID {managerId}.", employee);
+    }
+    public Result<List<Employee>> GetAllEmployees()
+    {
+        if(_employees.Count == 0)
+        {
+            return Result<List<Employee>>.Failure("No employees found in the company.");
+        }
+        else 
+            return Result<List<Employee>>.Success("All employees retrieved.", _employees);
+    }
+    // Department Management
+    public Result<Department> AddDepartment()
+    {
+        var department = new Department();
+        if (department.Read())
+        {
+            if (_departments.ContainsKey(department.Id))
+            {
+                return Result<Department>.Failure($"Department with ID {department.Id} already exists.");
+            }
+            else
+            {
+                _departments.Add(department.Id, department);
+                Log($"Department with ID {department.Id} added.");
+                return Result<Department>.Success($"Department with ID {department.Id} added.", department);
+            }
+        }
+        else
+        {
+            return Result<Department>.Failure("Failed to read department information.");
+        }
+    }
+    public Result<Department> GetDepartmentById(int departmentId)
+    {
+        var department = new Department();
+        foreach (var dept in _departments.Values)
+        {
+            if (dept.Id == departmentId)
+            {
+                department = dept;
+                break;
+            }
+        }
+        if (department.Id == 0)
+        {
+            return Result<Department>.Failure($"No department found with ID {departmentId}.");
+        }
+        else
+        {
+            return Result<Department>.Success($"Department with ID {departmentId} found.", department);
+        }
+    } 
+    public Result<Department> RemoveDepartment(int departmentId)
+    {
+        if (_departments.ContainsKey(departmentId))
+        {
+            var department = _departments[departmentId];
+            _departments.Remove(departmentId);
+            Log($"Department with ID {departmentId} removed.");
+            return Result<Department>.Success($"Department with ID {departmentId} removed.", department);
+        }
+        else
+        {
+            return Result<Department>.Failure($"No department found with ID {departmentId}.");
+        }
+    }
+    public Result<List<Department>> GetAllDepartments()
+    {
+        if(_departments.Count == 0)
+        {
+            return Result<List<Department>>.Failure("No departments found in the company.");
+        }
+        else 
+            return Result<List<Department>>.Success("All departments retrieved.", _departments.Values.ToList());
+    }
+    public Result<Dictionary<int,int>> GetDepartmentEmployeeCount()
+    {
+        var departmentEmployeeCount = new Dictionary<int, int>();
+        foreach (var employee in _employees)
+        {
+            if (departmentEmployeeCount.ContainsKey(employee.DepartmentId))
+            {
+                departmentEmployeeCount[employee.DepartmentId]++;
+            }
+            else
+            {
+                departmentEmployeeCount[employee.DepartmentId] = 1;
+            }
+        }
+        return Result<Dictionary<int,int>>.Success("Department employee counts retrieved.", departmentEmployeeCount);
+    }
     //public void run()
     //{
     //    while (true)
