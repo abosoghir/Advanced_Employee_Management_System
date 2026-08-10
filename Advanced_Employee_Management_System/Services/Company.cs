@@ -94,8 +94,18 @@ public class Company
         }
 
     }
-    public Result<Employee> PromoteEmployeetoManager(int employeeId)
+    public Result<Employee> PromoteEmployeetoManager()
     {
+        Console.WriteLine("Enter Employee ID to promote: ");
+        var employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+        {
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        }
         var employee = new Employee();
         int indx = -1;
         for (int i = 0; i < _employees.Count; i++)
@@ -139,8 +149,18 @@ public class Company
             }
         }
     }
-    public Result<Employee> DemoteManagerToEmployee(int employeeId)
+    public Result<Employee> DemoteManagerToEmployee()
     {
+        Console.WriteLine("Enter Employee ID to demote: ");
+        var employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+        {
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        }
         var employee = new Employee();
         int indx = -1;
         for (int i = 0; i < _employees.Count; i++)
@@ -179,8 +199,18 @@ public class Company
             }
         }
     }
-    public Result<Employee> RemoveEmployee(int employeeId)
+    public Result<Employee> RemoveEmployee()
     {
+        Console.WriteLine("Enter Employee ID to remove: ");
+        var employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+        {
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        }
         var employee = new Employee();
         for (int i = 0; i < _employees.Count; i++)
         {
@@ -201,8 +231,18 @@ public class Company
             return Result<Employee>.Success($"Employee with ID {employeeId} removed from the company.", employee);
         }
     }
-    public Result<Employee> UpdateEmployee(int employeeId)
+    public Result<Employee> UpdateEmployee()
     {
+        Console.WriteLine("Enter Employee ID to update: ");
+        var employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+        {
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        }
         var employee = new Employee();
         int indx = -1;
         for (int i = 0; i < _employees.Count; i++)
@@ -234,8 +274,19 @@ public class Company
             }
         }
     }
-    public Result<Employee> AddSkillToEmployee(int employeeId, string skill)
+    public Result<Employee> AddSkillToEmployee()
     {
+        Console.WriteLine("Enter the Employee ID: ");
+        int employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else 
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        Console.WriteLine("Enter the skill ");
+        
+        string skill = Console.ReadLine()!;
         var employee = new Employee();
         int indx = -1;
         for (int i = 0; i < _employees.Count; i++)
@@ -253,10 +304,24 @@ public class Company
         }
         else
         {
-            if (employee.AddSkill(skill))
+            bool skillExists = false;
+            foreach (var sk in _companySkills)
+            {
+                if (skill == sk)
+                {
+                    skill = sk;
+                    skillExists = true;
+                    break;
+                }
+            }
+            if (employee.AddSkill(skill) && skillExists)
             {
                 Log($"Skill '{skill}' added to employee with ID {employeeId}.");
                 return Result<Employee>.Success($"Skill '{skill}' added to employee with ID {employeeId}.", employee);
+            }
+            else if(!skillExists)
+            {
+                return Result<Employee>.Failure($"Skill '{skill}' does not exist in the company.");
             }
             else
             {
@@ -264,8 +329,19 @@ public class Company
             }
         }
     }
-    public Result<Employee> RemoveSkillFromEmployee(int employeeId, string skill)
+    public Result<Employee> RemoveSkillFromEmployee()
     {
+        Console.WriteLine("Enter the Employee ID: ");
+        int employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        Console.WriteLine("Enter the skill ");
+
+        string skill = Console.ReadLine()!;
         var employee = new Employee();
         int indx = -1;
         for (int i = 0; i < _employees.Count; i++)
@@ -283,7 +359,21 @@ public class Company
         }
         else
         {
-            if (employee.RemoveSkill(skill))
+            bool skillExists = false;
+            foreach (var sk in _companySkills)
+            {
+                if (skill == sk)
+                {
+                    skill = sk;
+                    skillExists = true;
+                    break;
+                }
+            }
+            if (!skillExists)
+            {
+                return Result<Employee>.Failure($"Skill '{skill}' does not exist in the company.");
+            }
+            else if (employee.RemoveSkill(skill) && skillExists)
             {
                 Log($"Skill '{skill}' removed from employee with ID {employeeId}.");
                 return Result<Employee>.Success($"Skill '{skill}' removed from employee with ID {employeeId}.", employee);
@@ -294,8 +384,16 @@ public class Company
             }
         }
     }
-    public Result<Employee> ShowEmployeeDetails(int employeeId)
+    public Result<Employee> ShowEmployeeDetails()
     {
+        Console.WriteLine("Enter the Employee ID: ");
+        int employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+            return Result<Employee>.Failure("Invalid Employee ID.");
         var employee = new Employee();
         for (int i = 0; i < _employees.Count; i++)
         {
@@ -314,8 +412,24 @@ public class Company
             return Result<Employee>.Success($"Employee with ID {employeeId} details displayed.", employee);
         }
     }
-    public Result<Employee> AddMemeberToManager(int managerId, int employeeId)
+    public Result<Employee> AddMemeberToManager()
     {
+        Console.WriteLine("Enter the Employee ID: ");
+        int employeeId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            employeeId = id;
+        }
+        else
+            return Result<Employee>.Failure("Invalid Employee ID.");
+        Console.WriteLine("Enter the Manager ID: ");
+        int managerId = 0;
+        if (int.TryParse(Console.ReadLine(), out int mid))
+        {
+            managerId = mid;
+        }
+        else
+            return Result<Employee>.Failure("Invalid Employee ID.");
         var manager = new Manager();
         var employee = new Employee();
         int managerIndx = -1;
@@ -376,8 +490,16 @@ public class Company
             return Result<Department>.Failure("Failed to read department information.");
         }
     }
-    public Result<Department> GetDepartmentById(int departmentId)
+    public Result<Department> GetDepartmentById()
     {
+        Console.WriteLine("Enter the Department ID: ");
+        int departmentId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            departmentId = id;
+        }
+        else
+            return Result<Department>.Failure("Invalid Department ID.");
         var department = new Department();
         foreach (var dept in _departments.Values)
         {
@@ -396,8 +518,16 @@ public class Company
             return Result<Department>.Success($"Department with ID {departmentId} found.", department);
         }
     } 
-    public Result<Department> RemoveDepartment(int departmentId)
+    public Result<Department> RemoveDepartment()
     {
+        Console.WriteLine("Enter the Department ID: ");
+        int departmentId = 0;
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            departmentId = id;
+        }
+        else
+            return Result<Department>.Failure("Invalid Department ID.");
         if (_departments.ContainsKey(departmentId))
         {
             var department = _departments[departmentId];
@@ -443,8 +573,10 @@ public class Company
         return Result<Dictionary<int,int>>.Success("Department employee counts retrieved.", departmentEmployeeCount);
     }
     // Skill Management
-    public Result<string> AddSkill(string skill)
+    public Result<string> AddSkill()
     {
+        Console.WriteLine("Enter the skill to add: ");
+        string skill = Console.ReadLine()!;
         if (_companySkills.Contains(skill))
         {
             return Result<string>.Failure($"Skill '{skill}' already exists in the company.");
@@ -456,8 +588,10 @@ public class Company
             return Result<string>.Success($"Skill '{skill}' added to the company.", skill);
         }
     }
-    public Result<string> RemoveSkill(string skill)
+    public Result<string> RemoveSkill()
     {
+        Console.WriteLine("Enter the skill to remove: ");
+        string skill = Console.ReadLine()!;
         if (_companySkills.Contains(skill))
         {
             _companySkills.Remove(skill);

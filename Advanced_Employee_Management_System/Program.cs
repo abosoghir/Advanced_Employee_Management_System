@@ -6,6 +6,88 @@ public class Program
     public static void Main(string[] args)
     {
         Company company = new Company();
+        company.EmployeeOnboarded += (e) => Console.WriteLine($"Employee onboarded: {e.Employee.ToString()}, {e.Message}");
+        company.EmployeePromoted += (e) => Console.WriteLine($"Employee promoted: {e.Employee.ToString()}, {e.Message}");
+
+        while (true)
+        {
+            int choice = company.menu();
+            switch (choice)
+            {
+                case 1:
+                    Console.WriteLine(company.AddEmployeeToOnboarding());
+                    break;
+                case 2:
+                    Console.WriteLine(company.ProcessNextEmployee());
+                    break;
+                case 3:
+                    Console.WriteLine(company.HandleSearchForEmployee());
+                    break;
+                case 4:
+                    HandleFilterEmployees(company);
+                    break;
+                case 5:
+                    Console.WriteLine(company.PromoteEmployeetoManager());
+                    break;
+                case 6:
+                    Console.WriteLine(company.DemoteManagerToEmployee());
+                    break;
+                case 7:
+                    Console.WriteLine(company.RemoveEmployee());
+                    break;
+                case 8:
+                    Console.WriteLine(company.UpdateEmployee());
+                    break;
+                case 9:
+                    Console.WriteLine(company.AddSkillToEmployee());
+                    break;
+                case 10:
+                    Console.WriteLine(company.RemoveSkillFromEmployee());
+                    break;
+                case 11:
+                    Console.WriteLine(company.ShowEmployeeDetails());
+                    break;
+                case 12:
+                    Console.WriteLine(company.AddMemeberToManager());
+                    break;
+                case 13:
+                    Console.WriteLine(company.GetAllEmployees());
+                    break;
+                case 14:
+                    Console.WriteLine(company.AddDepartment());
+                    break;
+                case 15:
+                    Console.WriteLine(company.GetDepartmentById());
+                    break;
+                case 16:
+                    Console.WriteLine(company.RemoveDepartment());
+                    break;
+                case 17:
+                    Console.WriteLine(company.GetAllDepartments());
+                    break;
+                case 18:
+                    Console.WriteLine(company.GetDepartmentEmployeeCount());
+                    break;
+                case 19:
+                    Console.WriteLine(company.AddSkill());
+                    break;
+                case 20:
+                    Console.WriteLine(company.RemoveSkill());
+                    break;
+                case 21:
+                    Console.WriteLine(company.GetAllSkills());
+                    break;
+                case 22:
+                    Console.WriteLine(company.GetActionHistory());
+                    break;
+                case 23:
+                    Console.WriteLine(company.CalcAvarageSalary());
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        }
 
     }
     private static void HandleFilterEmployees(Company company)
