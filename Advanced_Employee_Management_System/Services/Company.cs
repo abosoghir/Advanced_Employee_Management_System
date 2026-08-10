@@ -168,7 +168,6 @@ public class Company
     public Result<Employee> RemoveEmployee(int employeeId)
     {
         var employee = new Employee();
-        int indx = -1;
         for (int i = 0; i < _employees.Count; i++)
         {
             if (_employees[i].HasId(employeeId))
@@ -400,12 +399,19 @@ public class Company
     }
     public Result<List<Department>> GetAllDepartments()
     {
-        if(_departments.Count == 0)
+        if (_departments.Count == 0)
         {
             return Result<List<Department>>.Failure("No departments found in the company.");
         }
-        else 
-            return Result<List<Department>>.Success("All departments retrieved.", _departments.Values.ToList());
+        else
+        {
+            var departmentList = new List<Department>();
+            foreach (var dept in _departments.Values)
+            {
+                departmentList.Add(dept);
+            }
+            return Result<List<Department>>.Success("All departments retrieved.", departmentList);
+        }
     }
     public Result<Dictionary<int,int>> GetDepartmentEmployeeCount()
     {
@@ -423,45 +429,61 @@ public class Company
         }
         return Result<Dictionary<int,int>>.Success("Department employee counts retrieved.", departmentEmployeeCount);
     }
-    //public void run()
-    //{
-    //    while (true)
-    //    {
-    //        int choice = menu();
-
-    //        if (choice == 1)
-    //            AddDepartment();
-    //        else if (choice == 2)
-    //            AddEmployeeToOnboarding();
-    //        else if (choice == 3)
-    //            ProcessNextEmployee();
-    //        else if (choice == 4)
-    //            AddSkill();
-    //        else if (choice == 5)
-    //            SearchById();
-    //        else if (choice == 6)
-    //            SearchByName();
-    //        else if (choice == 7)
-    //            ShowDepartmentEmployees();
-    //        else if (choice == 8)
-    //            CalculateAverageSalaryInDepartment();
-    //        else if (choice == 9)
-    //            DepartmentReport();
-    //        else if (choice == 10)
-    //            ShowHistory();
-    //        else if (choice == 11)
-    //            ShowCompanySkills();
-    //        else if (choice == 12)
-    //            ShowEmployees();
-    //        else if (choice == 13)
-    //            ShowWaitingEmployees();
-    //        else
-    //            break;
-    //    }
-    //}
-
-
-
+    // Skill Management
+    public Result<string> AddSkill(string skill)
+    {
+        if (_companySkills.Contains(skill))
+        {
+            return Result<string>.Failure($"Skill '{skill}' already exists in the company.");
+        }
+        else
+        {
+            _companySkills.Add(skill);
+            Log($"Skill '{skill}' added to the company.");
+            return Result<string>.Success($"Skill '{skill}' added to the company.", skill);
+        }
+    }
+    public Result<string> RemoveSkill(string skill)
+    {
+        if (_companySkills.Contains(skill))
+        {
+            _companySkills.Remove(skill);
+            Log($"Skill '{skill}' removed from the company.");
+            return Result<string>.Success($"Skill '{skill}' removed from the company.", skill);
+        }
+        else
+        {
+            return Result<string>.Failure($"Skill '{skill}' does not exist in the company.");
+        }
+    }
+    public Result<HashSet<string>> GetAllSkills()
+    {
+        if(_companySkills.Count == 0)
+        {
+            return Result<HashSet<string>>.Failure("No skills found in the company.");
+        }
+        else 
+            return Result<HashSet<string>>.Success("All skills retrieved.", _companySkills);
+    }
+    // History Management
+    public Result<List<string>> GetActionHistory()
+    {
+        if (_actionHistory.Count == 0)
+        {
+            return Result<List<string>>.Failure("No actions found in the history.");
+        }
+        else
+        {
+            var historyList = new List<string>();
+            foreach (var item in _actionHistory)
+            {
+                historyList.Add(item);
+            }
+            historyList.Reverse(); // To show the most recent action first
+            return Result<List<string>>.Success("Action history retrieved.", historyList);
+        }
+    }
+    
     public int menu()
     {
         int choice = -1;
@@ -470,27 +492,34 @@ public class Company
             Console.WriteLine("========================================");
             Console.WriteLine("    Employee Management System");
             Console.WriteLine("========================================");
-            Console.WriteLine("1. Add Department");
-            Console.WriteLine("2. Add Employee To Onboarding");
-            Console.WriteLine("3. Process Next Employee");
-            Console.WriteLine("4. Add Skill");
-            Console.WriteLine("5. Search Employee By ID");
-            Console.WriteLine("6. Search Employee By Name");
-            Console.WriteLine("7. Show Department Employees");
-            Console.WriteLine("8. Show Salary Average");
-            Console.WriteLine("9. Department Report");
-            Console.WriteLine("10. Show Action History");
-            Console.WriteLine("11. Show Company Skills");
-            Console.WriteLine("12. Show Active Employees");
-            Console.WriteLine("13. Show Onboarding Queue");
-            Console.WriteLine("14. Exit");
-            Console.Write("Enter your menu choice [1 - 14]: ");
-
+            Console.WriteLine("1. Add Employee ToOnboarding");
+            Console.WriteLine("2. Process Next Employee");
+            Console.WriteLine("3. Handle Search For Employee");
+            Console.WriteLine("4. Promote Employee to Manager");
+            Console.WriteLine("5. Demote Manager To Employee");
+            Console.WriteLine("6. Remove Employee");
+            Console.WriteLine("7. Update Employee");
+            Console.WriteLine("8. Add Skill To Employee");
+            Console.WriteLine("9. Remove Skill From Employee");
+            Console.WriteLine("10. Show Employee Details");
+            Console.WriteLine("11. Add Member To Manager");
+            Console.WriteLine("12. Get All Employees");
+            Console.WriteLine("13. Add Department");
+            Console.WriteLine("14. Get Department By Id");
+            Console.WriteLine("15. Remove Department");
+            Console.WriteLine("16. Get All Departments");
+            Console.WriteLine("17. Get Department Employee Count");
+            Console.WriteLine("18. Add Skill");
+            Console.WriteLine("19. Remove Skill");
+            Console.WriteLine("20. Get All Skills");
+            Console.WriteLine("21. Get Action History");
+            Console.WriteLine("22. Exit");
+            Console.Write("Enter your menu choice [1 - 22]: ");
             string input = Console.ReadLine()!;
 
             if (int.TryParse(input, out choice))
             {
-                if (choice < 1 || choice > 14)
+                if (choice < 1 || choice > 22)
                 {
                     Console.WriteLine("Invalid choice. Please try again.");
                     choice = -1;
