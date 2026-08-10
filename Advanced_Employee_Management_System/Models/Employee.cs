@@ -29,34 +29,10 @@ public class Employee
     }
 
 
-    public virtual void Display()
+    public override string ToString()
     {
-        Console.WriteLine("------------------------------------");
-        Console.WriteLine($"ID         : {Id}");
-        Console.WriteLine($"Name       : {Name}");
-        Console.WriteLine($"Department : {DepartmentId}");
-        Console.WriteLine($"Hire Date  : {HireDate:d}");
-        Console.WriteLine($"Salary     : {Salary}");
-
-        Console.Write("Skills : ");
-
-        if (Skills.Count == 0)
-        {
-            Console.WriteLine("No Skills");
-        }
-        else
-        {
-            for (int i = 0; i < Skills.Count; i++)
-            {
-                Console.Write(Skills[i]);
-
-                if (i != Skills.Count - 1)
-                    Console.Write(", ");
-            }
-
-            Console.WriteLine();
-        }
-    }
+        return $"ID : {Id}\nName: {Name}\nDepartment : {DepartmentId}\nHire Date  : {HireDate:d}\nSalary     : {Salary}\nSkills     : {(Skills.Count == 0 ? "No Skills" : string.Join(", ", Skills))}";
+    }                 
     public bool AddSkill(string skill)
     {
         if (HasSkill(skill))

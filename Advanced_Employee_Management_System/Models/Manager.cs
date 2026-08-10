@@ -18,11 +18,11 @@ public class Manager : Employee
         TeamMembers.Add(employee);
     }
 
-    public override void Display()
+    public override string ToString()
     {
-        base.Display();
+        string employeeInfo = base.ToString();
 
-        Console.WriteLine($"Team Members : {TeamMembers.Count}");
+        return $"{employeeInfo}\nTeam Members : {TeamMembers.Count}";
     }
     public void DisplayTeamMembers()
     {
@@ -35,7 +35,7 @@ public class Manager : Employee
         {
             foreach (var member in TeamMembers)
             {
-                member.Display();
+                Console.WriteLine(member.ToString());
             }
         }
     }

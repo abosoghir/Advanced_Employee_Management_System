@@ -15,9 +15,9 @@ public class Department
         Id = 0;
         Name = string.Empty;
     }
-    public void Display()
+    public override string ToString()
     {
-        Console.WriteLine($"{Id} - {Name}");
+        return $"{Id} - {Name}";
     }
     public bool Read()
     {
