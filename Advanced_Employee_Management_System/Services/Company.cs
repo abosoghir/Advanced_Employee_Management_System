@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Advanced_Employee_Management_System.Common;
+using Advanced_Employee_Management_System.Delegates;
 using Advanced_Employee_Management_System.Models;
 
 namespace Advanced_Employee_Management_System.Services;
@@ -297,7 +298,6 @@ public class Company
         }
         else
         {
-            employee.Display();
             return Result<Employee>.Success($"Employee with ID {employeeId} details displayed.", employee);
         }
     }
@@ -495,6 +495,20 @@ public class Company
         Log($"Total Average salary calculated: {averageSalary}");
         return Result<double>.Success($"Total Average salary calculated: {averageSalary}", averageSalary);
     }
+    // Filtering Employees Managment 
+    public List<Employee> FilterEmployees(FilterEmployee filter)
+    {
+        List<Employee> result = new List<Employee>();
+        if (filter == null)
+            return result;
+
+        foreach (Employee employee in _employees)
+        {
+            if (filter(employee))
+                result.Add(employee);
+        }
+        return result;
+    }
     public int menu()
     {
         int choice = -1;
@@ -525,13 +539,14 @@ public class Company
             Console.WriteLine("20. Get All Skills");
             Console.WriteLine("21. Get Action History");
             Console.WriteLine("22. Get Average Salary");
-            Console.WriteLine("23. Exit");
-            Console.Write("Enter your menu choice [1 - 23]: ");
+            Console.WriteLine("23. Filter Employees");
+            Console.WriteLine("24. Exit");
+            Console.Write("Enter your menu choice [1 - 24]: ");
             string input = Console.ReadLine()!;
 
             if (int.TryParse(input, out choice))
             {
-                if (choice < 1 || choice > 23)
+                if (choice < 1 || choice > 24)
                 {
                     Console.WriteLine("Invalid choice. Please try again.");
                     choice = -1;
