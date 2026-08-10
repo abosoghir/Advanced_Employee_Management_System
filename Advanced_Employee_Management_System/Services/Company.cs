@@ -483,7 +483,18 @@ public class Company
             return Result<List<string>>.Success("Action history retrieved.", historyList);
         }
     }
-    
+    // Salary Management
+    public Result<double> CalcAvarageSalary()
+    {
+        double totalSalary = 0;
+        foreach (var employee in _employees)
+        {
+            totalSalary += employee.Salary;
+        }
+        double averageSalary = _employees.Count > 0 ? totalSalary / _employees.Count : 0;
+        Log($"Total Average salary calculated: {averageSalary}");
+        return Result<double>.Success($"Total Average salary calculated: {averageSalary}", averageSalary);
+    }
     public int menu()
     {
         int choice = -1;
@@ -513,13 +524,14 @@ public class Company
             Console.WriteLine("19. Remove Skill");
             Console.WriteLine("20. Get All Skills");
             Console.WriteLine("21. Get Action History");
-            Console.WriteLine("22. Exit");
-            Console.Write("Enter your menu choice [1 - 22]: ");
+            Console.WriteLine("22. Get Average Salary");
+            Console.WriteLine("23. Exit");
+            Console.Write("Enter your menu choice [1 - 23]: ");
             string input = Console.ReadLine()!;
 
             if (int.TryParse(input, out choice))
             {
-                if (choice < 1 || choice > 22)
+                if (choice < 1 || choice > 23)
                 {
                     Console.WriteLine("Invalid choice. Please try again.");
                     choice = -1;
