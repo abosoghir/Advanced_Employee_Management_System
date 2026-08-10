@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Advanced_Employee_Management_System.Common;
 using Advanced_Employee_Management_System.Delegates;
+using Advanced_Employee_Management_System.Events;
 using Advanced_Employee_Management_System.Models;
 
 namespace Advanced_Employee_Management_System.Services;
@@ -16,6 +17,8 @@ public class Company
     private readonly Stack<string> _actionHistory = [];
     private readonly HashSet<string> _companySkills = [];
 
+    public event EmployeeEvent? EmployeeOnboarded;
+    public event EmployeeEvent? EmployeePromoted;
     private void Log(string action)
     {
         _actionHistory.Push($"{DateTime.Now:HH:mm:ss} - {action}");
@@ -52,6 +55,11 @@ public class Company
         var employee = _onboardingQueue.Dequeue();
         _employees.Add(employee);
         Log($"Employee with ID {employee.Id} processed and added to the company.");
+        if(EmployeeOnboarded != null)
+        {
+            var employeeEventArgs = new EmployeeEventArgs(employee, $"{employee.Name} has completed onboarding and is now active.");
+            EmployeeOnboarded(employeeEventArgs);
+        }
         return Result<Employee>.Success($"Employee with ID {employee.Id} processed and added to the company.", employee);
     }
     public Result<Employee> HandleSearchForEmployee()
@@ -122,6 +130,11 @@ public class Company
                 };
                 _employees[indx] = manager;
                 Log($"Employee with ID {employeeId} promoted to Manager.");
+                if(EmployeePromoted != null)
+                {
+                    var employeeEventArgs = new EmployeeEventArgs(manager, $"{manager.Name} has been promoted to Manager.");
+                    EmployeePromoted(employeeEventArgs);
+                }
                 return Result<Employee>.Success($"Employee with ID {employeeId} promoted to Manager.", manager);
             }
         }
