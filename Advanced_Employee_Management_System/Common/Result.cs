@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,11 +30,41 @@ public class Result<T>
         if (!IsSuccess)
             return $"FAIL: {Message}";
 
-        if (Data is IEnumerable<string> items)
+        return $"OK: {Message}\nData:\n{FormatData(Data)}";
+    }
+
+    private static string FormatData(object? data)
+    {
+        if (data is null)
+            return "No data.";
+
+        // Dictionary
+        if (data is IDictionary dictionary)
         {
-            return $"OK: {Message}\nData:\n{string.Join("\n", items)}";
+            var sb = new StringBuilder();
+
+            foreach (DictionaryEntry item in dictionary)
+            {
+                sb.AppendLine($"{item.Key} : {item.Value}");
+            }
+
+            return sb.ToString();
         }
 
-        return $"OK: {Message}\nData: {Data}";
+        // List, Queue, Stack, HashSet, etc.
+        if (data is IEnumerable collection && data is not string)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var item in collection)
+            {
+                sb.AppendLine(item?.ToString());
+            }
+
+            return sb.ToString();
+        }
+
+        // Normal objects
+        return data.ToString() ?? string.Empty;
     }
 }
