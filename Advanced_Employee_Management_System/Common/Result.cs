@@ -26,6 +26,6 @@ public class Result<T>
     }
     public override string ToString()
     {
-        return IsSuccess ? $"OK: {Message}" : $"FAIL: {Message}";
+        return IsSuccess ? $"OK: {Message} \nData : {Data?.ToString()}" : $"FAIL: {Message} \nData : \n{Data?.ToString()}";
     }
 }

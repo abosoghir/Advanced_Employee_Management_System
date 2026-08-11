@@ -68,9 +68,19 @@ public class Company
         var searchChoice = Console.ReadLine();
         if (searchChoice == "1")
         {
+            Console.WriteLine("Enter Employee ID to search: ");
+            int employeeId = 0;
+            if(int.TryParse(Console.ReadLine(), out int id))
+            {
+                employeeId = id;
+            }
+            else
+            {
+                return Result<Employee>.Failure("Invalid Employee ID.");
+            }
             foreach (var emp in _employees)
             {
-                if (emp.HasId(emp.Id))
+                if (emp.HasId(employeeId))
                 {
                     return Result<Employee>.Success($"Employee with ID {emp.Id} found.", emp);
                 }
@@ -79,9 +89,12 @@ public class Company
         }
         else if (searchChoice == "2")
         {
+            Console.WriteLine("Enter Employee Name to search: ");
+            string employeeName = Console.ReadLine()!;
+
             foreach (var emp in _employees)
             {
-                if (emp.HasName(emp.Name))
+                if (emp.HasName(employeeName))
                 {
                     return Result<Employee>.Success($"Employee with Name {emp.Name} found.", emp);
                 }
