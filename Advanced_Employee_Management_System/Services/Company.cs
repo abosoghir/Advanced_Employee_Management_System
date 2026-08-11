@@ -267,7 +267,7 @@ public class Company
                 break;
             }
         }
-        if (employee == null)
+        if (employee is null)
         {
             return Result<Employee>.Failure($"No employee found with ID {employeeId}.");
         }

@@ -108,10 +108,12 @@ public class Program
                 filtered = company.FilterEmployees(emp => emp is Manager);
                 break;
             case 2:
+                Console.WriteLine("Enter the salary threshold: ");
                 double threshold = double.TryParse(Console.ReadLine(), out double salary) ? salary : 0;
                 filtered = company.FilterEmployees(emp => emp.Salary > threshold);
                 break;
             case 3:
+                Console.WriteLine("Enter the department ID: ");
                 int departmentId = int.TryParse(Console.ReadLine(), out int deptId) ? deptId : 0;
                 filtered = company.FilterEmployees(emp => emp.DepartmentId == departmentId);
                 break;
