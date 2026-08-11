@@ -277,6 +277,11 @@ public class Company
             var updatedEmployee = new Employee();
             if (updatedEmployee.Read())
             {
+                bool departmentExists = _departments.ContainsKey(updatedEmployee.DepartmentId);
+                if (!departmentExists)
+                {
+                    return Result<Employee>.Failure($"Department with ID {updatedEmployee.DepartmentId} does not exist.");
+                }
                 _employees[indx] = updatedEmployee;
                 Log($"Employee with ID {employeeId} updated.");
                 return Result<Employee>.Success($"Employee with ID {employeeId} updated.", updatedEmployee);
