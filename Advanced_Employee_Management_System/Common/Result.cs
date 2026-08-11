@@ -26,6 +26,14 @@ public class Result<T>
     }
     public override string ToString()
     {
-        return IsSuccess ? $"OK: {Message} \nData : \n{Data?.ToString()}" : $"FAIL: {Message}";
+        if (!IsSuccess)
+            return $"FAIL: {Message}";
+
+        if (Data is IEnumerable<string> items)
+        {
+            return $"OK: {Message}\nData:\n{string.Join("\n", items)}";
+        }
+
+        return $"OK: {Message}\nData: {Data}";
     }
 }

@@ -31,7 +31,14 @@ public class Company
         {
             if (_departments.ContainsKey(employee.DepartmentId))
             {
-
+                int employeeId = employee.Id;
+                foreach (var emp in _employees)
+                {
+                    if (emp.HasId(employeeId))
+                    {
+                        return Result<Employee>.Failure($"Employee with ID {employeeId} already exists.");
+                    }
+                }
                 _onboardingQueue.Enqueue(employee);
                 Log($"Employee with ID {employee.Id} added to onboarding queue.");
                 return Result<Employee>.Success($"Employee with ID {employee.Id} added to onboarding queue.", employee);
